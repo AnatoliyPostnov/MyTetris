@@ -420,8 +420,8 @@ void MainWindow::keyPressEvent(QKeyEvent *ke){
 }
 
 void MainWindow::timer_start(){
-    type_figure=1+rand()%6;
-    switch(type_figure=4){
+    type_figure=1+rand()%5;
+    switch(type_figure){
         case 1:
             figure1=new Figure1();
             figure1->setPos(120, 0);
@@ -535,30 +535,6 @@ void MainWindow::START_figure(){
          count_timer=1;         
      }
      count_map=0;
-     foreach (QPoint point, points_figure1){
-         if (point.y()==570){
-             timer->stop();
-             switch(type_figure){
-                 case 1:
-                     scene->removeItem(figure1);
-                     break;
-                 case 2:
-                     scene->removeItem(figure2);
-                     break;
-                 case 3:
-                     scene->removeItem(figure3);
-                     break;
-                 case 4:
-                     scene->removeItem(figure4);
-                     break;
-                 case 5:
-                     scene->removeItem(figure5);
-                     break;
-             }
-             delete_figure();
-             count_timer=1;
-         }
-     }
      if(count_timer){
          count_timer=0;
          timer_start();
@@ -581,7 +557,6 @@ void MainWindow::START_figure(){
              break;
      }
 }
-
 void MainWindow::delete_figure(){
     for(int i=0;i<4;i++)
         for(int i=0;i<4;i++)
