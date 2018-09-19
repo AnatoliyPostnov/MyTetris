@@ -87,6 +87,19 @@ bool MainWindow::point_search_figure_two_positions(int a, int b,int c, int d)
                     return false;
          return true;
          break;
+     case 6:
+         foreach (QPoint p, map)
+            if(figure6->Count_rotation1()&&
+               figure6->get_figure1_x()+a==p.x()&&
+               figure6->get_figure1_y()+b==p.y())
+                    return false;
+         foreach (QPoint p, map)
+            if(figure6->Count_rotation1()==false&&
+               figure6->get_figure1_x()+c==p.x()&&
+               figure6->get_figure1_y()+d==p.y())
+                    return false;
+         return true;
+         break;
      }
 }
 bool MainWindow::point_search_figure_four_positions(int a,int b,int c,int d,int e,int g,int l, int s)
@@ -296,6 +309,22 @@ void MainWindow::keyPressEvent(QKeyEvent *ke){
                 if(point_search_figure_four_positions(0,0,30,60,0,30,60,60))
                     figure5->set_figure1_x(figure5->x()+30);
                 break;
+            case 6:
+                // перемещение влево
+                figure6->moveBy(-30, 0);
+                // ограничение по бортам
+                if(figure6->Count_rotation1()&&figure6->get_figure1_x()==-30)
+                    figure6->set_figure1_x(figure6->x()+30);
+                // ограничение по строению
+                if(point_search_figure_two_positions(0,0,0,0))
+                    figure6->set_figure1_x(figure6->x()+30);
+                if(point_search_figure_two_positions(0,0,0,30))
+                    figure6->set_figure1_x(figure6->x()+30);
+                if(point_search_figure_two_positions(0,0,0,60))
+                    figure6->set_figure1_x(figure6->x()+30);
+                if(point_search_figure_two_positions(0,0,0,90))
+                    figure6->set_figure1_x(figure6->x()+30);
+                break;
        }
         break;
     case Qt::Key_D:
@@ -370,6 +399,27 @@ void MainWindow::keyPressEvent(QKeyEvent *ke){
             if(point_search_figure_four_positions(60,0,60,60,60,30,60,60))
                 figure5->set_figure1_x(figure5->x()-30);
             break;
+        case 6:
+            //перемещение вправо
+            figure6->moveBy(30, 0);
+            //ограничение по бортам
+            if(figure6->Count_rotation1()&&
+               figure6->get_figure1_x()==210)
+                figure6->set_figure1_x(figure6->x()-30);
+            if(figure6->Count_rotation1()==false&&
+               figure6->get_figure1_x()==300)
+                figure6->set_figure1_x(figure6->x()-30);
+
+            //ограничение по строению
+            if(point_search_figure_two_positions(90,0,0,0))
+                figure6->set_figure1_x(figure6->x()-30);
+            if(point_search_figure_two_positions(90,0,0,30))
+                figure6->set_figure1_x(figure6->x()-30);
+            if(point_search_figure_two_positions(90,0,0,60))
+                figure6->set_figure1_x(figure6->x()-30);
+            if(point_search_figure_two_positions(90,0,0,90))
+                figure6->set_figure1_x(figure6->x()-30);
+            break;
         }
         break;
     case Qt::Key_S:
@@ -414,13 +464,26 @@ void MainWindow::keyPressEvent(QKeyEvent *ke){
             else
             figure5->rotation_figure1();
             break;
+          case 6:
+//            for(int i=270,x=360;i>=210;i-=30,x-=60){
+//                int l=0;
+//                foreach (QPoint p, map)
+//                    for(int j=30;j<=90;j=+30)
+//                        if(figure6->get_figure1_x()==p.x()-j)
+//                            l++;
+//                if(figure6->get_figure1_x()==i&&l==2){
+//                    figure6->set_figure1_x(figure6->x()-(x-i));
+                    figure6->rotation_figure1();
+//                }
+//            }
+            break;
         }
         break;
     }
 }
 
 void MainWindow::timer_start(){
-    type_figure=1+rand()%5;
+    type_figure=1+rand()%6;
     switch(type_figure){
         case 1:
             figure1=new Figure1();
@@ -477,6 +540,17 @@ void MainWindow::timer_start(){
             }
             else timer->stop();
             break;
+        case 6:
+            figure6=new Figure6();
+            figure6->setPos(120, 0);
+            timer= new QTimer;
+            if(removeItem_figure){
+                scene->addItem(figure6);
+                connect(timer, SIGNAL(timeout()),SLOT(START_figure()));
+                timer->start(200);
+            }
+            else timer->stop();
+            break;
     }
 }
 
@@ -505,6 +579,9 @@ void MainWindow::START_figure(){
         case 5:
             points_figure1=figure5->vector_points_figure1();
             break;
+        case 6:
+            points_figure1=figure6->vector_points_figure1();
+            break;
     }
     foreach (QPoint p, map)
         for(int i=0;i<4;i++)
@@ -530,6 +607,9 @@ void MainWindow::START_figure(){
              case 5:
                  scene->removeItem(figure5);
                  break;
+             case 6:
+                 scene->removeItem(figure6);
+                 break;
          }
          delete_figure();
          count_timer=1;         
@@ -554,6 +634,9 @@ void MainWindow::START_figure(){
              break;
          case 5:
              figure5->moveBy(X,Y);
+             break;
+         case 6:
+             figure6->moveBy(X,Y);
              break;
      }
 }
