@@ -35,8 +35,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(pb, SIGNAL(clicked()), this, SLOT(removeitem_figure()));
     connect(pb, SIGNAL(clicked()), this, SLOT(timer_start()));
-
-
 }
 
 QVector <QPoint> MainWindow::creat_map()
